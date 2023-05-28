@@ -1,0 +1,17 @@
+{
+  "name": "slack-post-on-schedule",
+  "version": "1.0.0",
+  "description": "Tutorial app that posts to a slack channel on schedule",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eakan Gopalakrishnan",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/bolt": "^3.13.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
+  }
+}
