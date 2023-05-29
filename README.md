@@ -38,5 +38,25 @@ Then responded to events, sent a button and responded to button click.
 
 https://slack.dev/bolt-js/tutorial/getting-started#next-steps
 
+## Convert to a Typescript project
 
+Follow instructions from [TypescriptLang - Migrating from Javascript](https://www.typescriptlang.org/docs/handbook/migrating-from-javascript.html)
 
+1. `src` folder created and moved `app.js` to it
+2. `tsconfig.json` created with barebones config
+3. Specified to include all files in `src` directory to be compiled
+4. Allow JS files to be included too - get it running first, then change things later
+5. Create all compiled output into `outDir`
+6. Translate newer constructs into older version of JS - ECMAScript 5 using `target`
+
+### Choosing a build tool to help with tasks
+
+I could use Gulp or Webpack and I remember Webpack being a massively powerful module bundler which evolved into a `can-do-it-all` thing.
+So I decided to keep it simple and stick to Gulp simply because, it is easier to get started with. Also I don't remember much of my node development days.
+
+The other advantage with gulp was that I could write configuration like I was writing javascript which I felt was easier to understand and read than a json configuration file.
+
+### Import statements
+
+As I am switching to typescript, I decided to move to a modern ES6 syntax to importing modules. So updated all the `require` statements in my `.ts` files.
+ 

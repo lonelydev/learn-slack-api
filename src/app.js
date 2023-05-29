@@ -1,5 +1,11 @@
-const {App} = require('@slack/bolt');
-require('dotenv').config()
+import { sayHello } from './main';
+import {App} from "@slack/bolt";
+import * as dotenv from "dotenv";
+import {WebClient, LogLevel} from "@slack/web-api";
+
+console.log(sayHello("Typescript"));
+
+dotenv.config();
 
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
@@ -7,16 +13,6 @@ const app = new App({
     socketMode: true,
     appToken: process.env.SLACK_APP_TOKEN,
     port: process.env.PORT || 3000
-});
-
-// Require the Node Slack SDK package (github.com/slackapi/node-slack-sdk)
-const { WebClient, LogLevel } = require("@slack/web-api");
-
-// WebClient instantiates a client that can call API methods
-// When using Bolt, you can use either `app.client` or the `client` passed to listeners.
-const webClient = new WebClient(process.env.SLACK_BOT_TOKEN, {
-  // LogLevel can be imported and used to make debugging simpler
-  logLevel: LogLevel.DEBUG
 });
 
 // Find conversation ID using the conversations.list method
@@ -46,9 +42,6 @@ async function findConversation(name) {
 
 
 async function postMessage(channelId, message){
-  // Require the Node Slack SDK package (github.com/slackapi/node-slack-sdk)
-  const { WebClient, LogLevel } = require("@slack/web-api");
-
   // WebClient instantiates a client that can call API methods
   // When using Bolt, you can use either `app.client` or the `client` passed to listeners.
   const client = new WebClient(process.env.SLACK_BOT_TOKEN, {
@@ -143,15 +136,25 @@ function getTimeInPast(timeSinceInMilliSeconds){
     return yesterday;
 }
 
+// async function fetchMessagesWithReactionSince(reaction, since, channelId, limitTo){
+//   let messagesSince = await fetchMessages(channelId, since.getTime(), true, limitTo || 100);
+//   let messagesWithReaction = [];
+//   messagesSince.forEach(
+//     message => {
+//       if(message.reactions && message.reactions.){
+
+//       }
+//     }
+//   )
+// }
+
 (async() => {
     // start app
     await app.start();
 
     console.log('⚡️ Bolt app is running!');
-    var channelId = await findConversation("learn-slack-api");
-    //await postMessage(channelId, "hello, I'm testing slack api");
+    var channelId = await findConversation("team-support");
     // Fetch message using a channel ID and message TS
-    
     let yesterday = getTimeInPast(60*60*1000);
     let messagesSince = await fetchMessages(channelId, yesterday.getTime(), true, 100);
     console.log("retrieved " + messagesSince.length +  " messages: ");
