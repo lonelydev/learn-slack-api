@@ -76,7 +76,7 @@ async function fetchMessages(channelId, uptoTimeInEpoch, inclusive, limitTo){
             token: process.env.SLACK_BOT_TOKEN,
             channel: channelId,
             // In a more realistic app, you may store ts data in a db
-            latest: uptoTimeInEpoch,
+            //latest: uptoTimeInEpoch,
             // Limit results
             inclusive: inclusive,
             limit: limitTo
@@ -136,17 +136,15 @@ function getTimeInPast(timeSinceInMilliSeconds){
     return yesterday;
 }
 
-// async function fetchMessagesWithReactionSince(reaction, since, channelId, limitTo){
-//   let messagesSince = await fetchMessages(channelId, since.getTime(), true, limitTo || 100);
-//   let messagesWithReaction = [];
-//   messagesSince.forEach(
-//     message => {
-//       if(message.reactions && message.reactions.){
-
-//       }
-//     }
-//   )
-// }
+async function fetchMessagesWithReactionSince(reactionName, since, channelId, limitTo){
+  let messagesSince = await fetchMessages(channelId, since, true, limitTo || 100);
+  let messagesWithReaction = [];
+  messagesWithReaction = messagesSince.filter((message) => {
+    return message.reactions && message.reactions
+    .some((reaction) => reaction.name === reactionName)
+  });
+  return messagesWithReaction;
+}
 
 (async() => {
     // start app
@@ -156,9 +154,16 @@ function getTimeInPast(timeSinceInMilliSeconds){
     var channelId = await findConversation("team-support");
     // Fetch message using a channel ID and message TS
     let yesterday = getTimeInPast(60*60*1000);
-    let messagesSince = await fetchMessages(channelId, yesterday.getTime(), true, 100);
-    console.log("retrieved " + messagesSince.length +  " messages: ");
-    messagesSince.forEach(
+    let messagesSinceTimeWithQuestionReaction = await fetchMessagesWithReactionSince('question', yesterday.getTime(), channelId);
+
+    console.log("retrieved " + messagesSinceTimeWithQuestionReaction.length +  " messages with question reaction: ");
+    messagesSinceTimeWithQuestionReaction.forEach(
+            element => console.log(element)
+          );
+
+    let messagesSinceTimeWithWarningReaction = await fetchMessagesWithReactionSince('warning', yesterday.getTime(), channelId);
+    console.log("retrieved " + messagesSinceTimeWithWarningReaction.length +  " messages with warning reaction ");
+    messagesSinceTimeWithWarningReaction.forEach(
             element => console.log(element)
           );
 })();
