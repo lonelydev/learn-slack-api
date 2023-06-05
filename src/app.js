@@ -146,6 +146,137 @@ async function fetchMessagesWithReactionSince(reactionName, since, channelId, li
   return messagesWithReaction;
 }
 
+async function createWeeklyStatsMessage(messages, channelId){
+let message = [
+  {
+    "type": "header",
+    "text": {
+      "type": "plain_text",
+      "text": ":calendar: Weekly Support Highlights :traffic_light:",
+      "emoji": true
+    }
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:sos: Help Troubleshoot*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*10*"
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:question: How to*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*5*"
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:merge: Pull request*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*19*"
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:secret: Credential Request*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*1*"
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:i_heart_admin: Admin request*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*1*"
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:bug: Bug*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*0*"
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:new: New Feature*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*1*"
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:lock: Security Compliance*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*1*"
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*:info: Info/announcement*"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*1*"
+      }
+    ]
+  }
+];
+  return message;
+}
+
 (async() => {
     // start app
     await app.start();
@@ -153,7 +284,7 @@ async function fetchMessagesWithReactionSince(reactionName, since, channelId, li
     console.log('⚡️ Bolt app is running!');
     var channelId = await findConversation("team-support");
     // Fetch message using a channel ID and message TS
-    let yesterday = getTimeInPast(60*60*1000);
+    let yesterday = getTimeInPast(24*7*60*60*1000);
     let messagesSinceTimeWithQuestionReaction = await fetchMessagesWithReactionSince('question', yesterday.getTime(), channelId);
 
     console.log("retrieved " + messagesSinceTimeWithQuestionReaction.length +  " messages with question reaction: ");
@@ -166,4 +297,16 @@ async function fetchMessagesWithReactionSince(reactionName, since, channelId, li
     messagesSinceTimeWithWarningReaction.forEach(
             element => console.log(element)
           );
+    let summaryMessageToPost = await createWeeklyStatsMessage(messagesSinceTimeWithQuestionReaction, channelId);
+    console.log(summaryMessageToPost);
+    console.log(JSON.stringify(summaryMessageToPost));
+    try {
+      await app.client.chat.postMessage({
+        channel: channelId,
+        text: "summary of statistics!",
+        blocks: JSON.stringify(summaryMessageToPost)
+      });
+    } catch(error){
+      console.error(error);
+    }
 })();
