@@ -59,4 +59,8 @@ The other advantage with gulp was that I could write configuration like I was wr
 ### Import statements
 
 As I am switching to typescript, I decided to move to a modern ES6 syntax to importing modules. So updated all the `require` statements in my `.ts` files.
- 
+
+## Useful Links
+
+- [Slack App on AWS](https://www.youtube.com/watch?v=Qp4Itl7hVho)
+- [How to build a slackbot? Node, AWS Lambda and DynamoDB - AWS Serverless](https://www.youtube.com/watch?v=rUIptoPXu_8)
